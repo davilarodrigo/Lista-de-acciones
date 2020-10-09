@@ -13,32 +13,31 @@
     <div class="container-fluid">
         <div class="row ">
             <div class="col-12 text-center">
-                <div class="display-2 ">Lista de acciones</div>
+                <div class="display-2 d-none d-md-block">Lista de acciones</div>
             </div>
         </div>
 
-
-
         <div class="row justify-content-around">
-            <div  class="col-12 col-lg-5">
-                <div class="text-center display-4">Acciones</div>
-                <div style="min-height: 300px;" id="acciones_pendientes" class="bg-info">
-                
+            <div class="col-12 col-lg-5">
+                <div class="text-center display-4">Pendientes</div>
+                <div style="min-height: 300px;" id="acciones_pendientes" class="pb-2 bg-info">
+
+
                 </div>
             </div>
-            <div  class="col-12 col-lg-5">
-                <div class="text-center display-4">Acciones Activas</div>
-                <div style="min-height: 300px;" id="acciones_activas" class="bg-info">
-                
+            <div class="col-12 col-lg-5">
+                <div class="text-center display-4">Activas</div>
+                <div style="min-height: 300px;" id="acciones_activas" class="p-2 bg-info">
+
                 </div>
             </div>
 
         </div>
         <div class="row justify-content-around">
             <div class="mb-3 col-12 col-lg-8 text-center mt-4 ">
-                <input class="" style="width: 40%;" placeholder="Ingrese su accion..." type="text">
-                <button class="btn btn-primary">Añadir</button>
-                <button class="btn btn-danger">Borrar Todo</button>
+                <input id="input_accion" class="" style="width: 40%;" placeholder="Ingrese su accion..." type="text">
+                <button onclick="agregar_accion()" class="btn_tipo_1 btn btn-primary">Añadir</button>
+                <button onclick="borrar_todo()" class="btn_tipo_1 btn btn-danger">Borrar Todo</button>
             </div>
         </div>
 
@@ -47,18 +46,158 @@
 
     <script>
 
-        function borrar_todo(){
+        var lista_acciones = document.getElementById("acciones_pendientes");
+        var lista_activas = document.getElementById("acciones_activas");
+        var acum_id = 0;
+
+        function probando(){
+            console.log("prueba");
+        }
+
+        function borrar_todo() {
+
+            //agregar alerta o dialogo de confirmacion
+
+            lista_activas.innerHTML = "";
+            lista_acciones.innerHTML = "";
+        }
+
+
+        function crear_div_accion(id, texto_accion) {
+
+            div = '<div id="div_'
+                + id
+                + '" class="div_item pt-2 ml-2">'
+                + crear_contenido_div(id, texto_accion)
+                + '</div>';
+            return div;
+        }
+
+        function crear_contenido_div(id, texto_accion) {
+
+            div = '• <span id="span_'
+                + id
+                + '">'
+                + texto_accion
+                + '</span>'
+                + '<button id="btn_b_'
+                + id
+                + '" onclick="borrar_accion('
+                + id
+                + ')" class="btn_tipo_1 ml-1 py-0 px-2 btn btn-danger">X</button>'
+                + '<button id="btn_e_'
+                + id
+                + '" onclick="comenzar_edicion('
+                + id
+                + ')" class="btn_tipo_1 ml-1 py-0 px-2 btn btn-primary">Editar</button>'
+                + '<button id="btn_a_'
+                + id
+                + '" onclick="activar_accion('
+                + id
+                + ')" class="btn_tipo_1 ml-1 py-0 px-2 btn btn-warning">Comenzar</button>';
+
+            return div;
+        }
+
+        function agregar_accion() {
+            input_accion = document.getElementById("input_accion");
+            texto = input_accion.value;
+
+            if (texto != "") {
+                input_accion.value = "";
+                div_accion = crear_div_accion(acum_id, texto);
+                acum_id++;
+                lista_acciones.innerHTML += div_accion;
+            }
+
 
         }
 
-        function crear_div_accion(id,texto_accion){
+        function activar_accion(id) {            
+            texto=obtener_texto(id);
+            div = obtener_div(id);
+            div.remove();
+            lista_activas.innerHTML += crear_div_accion(id,texto);
+
+            //esto es para que las acciones comenzadas no se puedan editar ni comenzar, solo se pueden "terminar"
+            //en realidad es un parche mas que nada
+            document.getElementById("btn_a_"+id).remove();
+            document.getElementById("btn_e_"+id).remove();
+            document.getElementById("btn_b_"+id).innerText="Terminar";
+     
+        }
+
+        function borrar_accion(id) {
+            div = "div_" + id;
+            document.getElementById(div).remove();
+        }
+
+        function comenzar_edicion(id) {
+            div = "div_" + id;
+            div = document.getElementById(div);
+
+            ocultar_botones();
+
+            texto_anterior = document.getElementById("span_" + id).innerText;
+
+            div.innerHTML = '<input id="input_edicion" type="text">'
+                + '<button class="ml-1 py-0 px-2 btn btn-success" onclick="aceptar_edicion('
+                + id
+                + ')" >Aceptar</button>'
+                + '<button class="ml-1 py-0 px-2 btn btn-danger" onclick="cancelar_edicion('
+                + id + ",'" + texto_anterior + "'"
+                + ')">Cancelar</button>';
+
+            input_edicion = document.getElementById("input_edicion");
+            input_edicion.value = texto_anterior;
 
         }
 
-        function agregar_accion(){
+        function obtener_div(id) {
+            return document.getElementById("div_" + id);
+        }
+
+        function obtener_texto(id) {
+            return document.getElementById("span_" + id).innerText;
+        }
+
+        function aceptar_edicion(id) {
+            console.log("aceptar_edicion");
+            div = obtener_div(id);
+            texto = input_edicion = document.getElementById("input_edicion").value;
+
+            div.innerHTML = crear_contenido_div(id, texto);
+
+            mostrar_botones();
 
         }
 
+        function cancelar_edicion(id, texto_anterior) {
+
+            console.log("cancelar_edicion");
+
+            div = obtener_div(id);
+
+            div.innerHTML = crear_contenido_div(id, texto_anterior);
+
+            mostrar_botones();
+
+        }
+
+        function ocultar_botones() {
+            botones = document.querySelectorAll(".btn_tipo_1");
+
+            botones.forEach(elemento => {
+                elemento.style.display = "none";
+            });
+        }
+
+        function mostrar_botones() {
+            botones = document.querySelectorAll(".btn_tipo_1");
+            botones.forEach(elemento => {
+                elemento.style.display = "inline";
+            });
+        }
 
     </script>
 
