@@ -37,7 +37,7 @@
             <div class="mb-3 col-12 col-lg-8 text-center mt-4 ">
                 <input id="input_accion" class="btn_tipo_0" style="width: 40%;" placeholder="Ingrese su accion..."
                     type="text">
-                <button onclick="agregar_accion()" class="btn_tipo_0 btn btn-primary">Añadir</button>
+                <button id="btn_agregar_accion" onclick="agregar_accion()" class="btn_tipo_0 btn btn-primary">Añadir</button>
                 <button onclick="borrar_todo()" class="btn_tipo_0 btn btn-danger">Borrar Todo</button>
             </div>
         </div>
@@ -84,6 +84,12 @@
             lista_activas.innerHTML = "";
             lista_acciones.innerHTML = "";
             acum_id = 0;
+
+            document.getElementById("input_accion").disabled = false;
+            document.getElementById("input_accion").placeholder = "Ingrese su accion...";
+            document.getElementById("btn_agregar_accion").disabled=false;
+            en_edicion=false;
+            
         }
 
 
@@ -152,7 +158,9 @@
             texto = obtener_texto(id);
             div = obtener_div(id);
             div.remove();
-            lista_activas.innerHTML += crear_div_accion(id, texto);
+
+            div_accion=crear_div_accion(id, texto);
+            lista_activas.insertAdjacentHTML("beforeend", div_accion); 
 
             //esto es para que las acciones comenzadas no se puedan editar ni comenzar, solo se pueden "terminar"
             //en realidad es un parche mas que nada
@@ -170,13 +178,16 @@
         }
 
         function comenzar_edicion(id) {
+   
+            document.getElementById("btn_agregar_accion").disabled=true;
+            document.getElementById("input_accion").disabled = true;
+            document.getElementById("input_accion").placeholder = "";
+
             en_edicion = true;
 
             div = "div_" + id;
             div = document.getElementById(div);
 
-            ocultar_botones(".btn_tipo_1");
-            ocultar_botones(".btn_tipo_0");
 
             texto_anterior = document.getElementById("span_" + id).innerText;
 
@@ -202,6 +213,9 @@
         }
 
         function aceptar_edicion(id) {
+            document.getElementById("btn_agregar_accion").disabled=false;
+            document.getElementById("input_accion").disabled = false;
+            document.getElementById("input_accion").placeholder = "Ingrese su accion...";
             en_edicion = false;
             console.log("aceptar_edicion");
             div = obtener_div(id);
@@ -215,6 +229,9 @@
         }
 
         function cancelar_edicion(id, texto_anterior) {
+            document.getElementById("btn_agregar_accion").disabled=false;
+            document.getElementById("input_accion").disabled = false;
+            document.getElementById("input_accion").placeholder = "Ingrese su accion...";
             en_edicion = false;
 
             console.log("cancelar_edicion");

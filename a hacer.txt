@@ -1,0 +1,2 @@
+el boton de añadir se tiene que bloquear durante las ediciones
+el boton de borrar todo no se tiene que bloquear, pero si se lo toca, hay que ponerle disable=false al input de acciones (porque sino nunca se vuelve a habilitar)
