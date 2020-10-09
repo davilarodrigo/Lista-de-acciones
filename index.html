@@ -53,6 +53,12 @@
         var items = [];
         var en_edicion = false;
 
+        document.getElementById("input_accion").addEventListener("keyup",function(event){
+            if(event.keyCode===13){
+                agregar_accion();
+            }
+        });
+
         function agregar_mouseover_eventlistener(id) {
 
             span = "div_" + id;
@@ -137,6 +143,7 @@
 
 
 
+
         function agregar_accion() {
             input_accion = document.getElementById("input_accion");
             texto = input_accion.value;
@@ -201,6 +208,12 @@
 
             input_edicion = document.getElementById("input_edicion");
             input_edicion.value = texto_anterior;
+
+            input_edicion.addEventListener("keyup",function(event){
+                if (event.keyCode===13){
+                    aceptar_edicion(id);
+                }
+            })
 
         }
 
