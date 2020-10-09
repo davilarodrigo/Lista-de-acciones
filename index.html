@@ -13,7 +13,7 @@
     <div class="container-fluid">
         <div class="row ">
             <div class="col-12 text-center">
-                <div class="display-2 d-none d-md-block">Lista de acciones</div>
+                <div onclick="probando2()" class="display-2 d-none d-md-block">Lista de acciones</div>
             </div>
         </div>
 
@@ -35,9 +35,10 @@
         </div>
         <div class="row justify-content-around">
             <div class="mb-3 col-12 col-lg-8 text-center mt-4 ">
-                <input id="input_accion" class="" style="width: 40%;" placeholder="Ingrese su accion..." type="text">
-                <button onclick="agregar_accion()" class="btn_tipo_1 btn btn-primary">Añadir</button>
-                <button onclick="borrar_todo()" class="btn_tipo_1 btn btn-danger">Borrar Todo</button>
+                <input id="input_accion" class="btn_tipo_0" style="width: 40%;" placeholder="Ingrese su accion..."
+                    type="text">
+                <button onclick="agregar_accion()" class="btn_tipo_0 btn btn-primary">Añadir</button>
+                <button onclick="borrar_todo()" class="btn_tipo_0 btn btn-danger">Borrar Todo</button>
             </div>
         </div>
 
@@ -49,10 +50,32 @@
         var lista_acciones = document.getElementById("acciones_pendientes");
         var lista_activas = document.getElementById("acciones_activas");
         var acum_id = 0;
+        var items = [];
+        var en_edicion = false;
 
-        function probando(){
-            console.log("prueba");
+        function agregar_mouseover_eventlistener(id) {
+
+            span = "div_" + id;
+            item = document.getElementById(span);
+
+
+            item.addEventListener("mouseover", function (event) {
+
+                if (!en_edicion) {
+                    ocultar_botones(".btn_tipo_1");
+                    mostrar_botones(".item_class_" + id);
+                }
+
+            }, false);
+            item.addEventListener("mouseleave", function (event) {
+
+                ocultar_botones(".btn_tipo_1");
+
+            }, false);
+
+            //items.push(item);
         }
+
 
         function borrar_todo() {
 
@@ -60,6 +83,7 @@
 
             lista_activas.innerHTML = "";
             lista_acciones.innerHTML = "";
+            acum_id = 0;
         }
 
 
@@ -84,20 +108,28 @@
                 + id
                 + '" onclick="borrar_accion('
                 + id
-                + ')" class="btn_tipo_1 ml-1 py-0 px-2 btn btn-danger">X</button>'
+                + ')" class="btn_tipo_1 ml-1 py-0 px-2 btn btn-danger item_class_'
+                + id
+                + '">X</button>'
                 + '<button id="btn_e_'
                 + id
                 + '" onclick="comenzar_edicion('
                 + id
-                + ')" class="btn_tipo_1 ml-1 py-0 px-2 btn btn-primary">Editar</button>'
+                + ')" class="btn_tipo_1 ml-1 py-0 px-2 btn btn-primary item_class_'
+                + id
+                + '">Editar</button>'
                 + '<button id="btn_a_'
                 + id
                 + '" onclick="activar_accion('
                 + id
-                + ')" class="btn_tipo_1 ml-1 py-0 px-2 btn btn-warning">Comenzar</button>';
+                + ')" class="btn_tipo_1 ml-1 py-0 px-2 btn btn-warning item_class_'
+                + id
+                + '">Comenzar</button>';
 
             return div;
         }
+
+
 
         function agregar_accion() {
             input_accion = document.getElementById("input_accion");
@@ -106,25 +138,30 @@
             if (texto != "") {
                 input_accion.value = "";
                 div_accion = crear_div_accion(acum_id, texto);
+                lista_acciones.insertAdjacentHTML("beforeend", div_accion);
+                //                lista_acciones.innerHTML += div_accion;
+                agregar_mouseover_eventlistener(acum_id);
+
                 acum_id++;
-                lista_acciones.innerHTML += div_accion;
             }
 
-
+            ocultar_botones(".btn_tipo_1");
         }
 
-        function activar_accion(id) {            
-            texto=obtener_texto(id);
+        function activar_accion(id) {
+            texto = obtener_texto(id);
             div = obtener_div(id);
             div.remove();
-            lista_activas.innerHTML += crear_div_accion(id,texto);
+            lista_activas.innerHTML += crear_div_accion(id, texto);
 
             //esto es para que las acciones comenzadas no se puedan editar ni comenzar, solo se pueden "terminar"
             //en realidad es un parche mas que nada
-            document.getElementById("btn_a_"+id).remove();
-            document.getElementById("btn_e_"+id).remove();
-            document.getElementById("btn_b_"+id).innerText="Terminar";
-     
+            document.getElementById("btn_a_" + id).remove();
+            document.getElementById("btn_e_" + id).remove();
+            document.getElementById("btn_b_" + id).innerText = "Terminar";
+
+            agregar_mouseover_eventlistener(id);
+
         }
 
         function borrar_accion(id) {
@@ -133,10 +170,13 @@
         }
 
         function comenzar_edicion(id) {
+            en_edicion = true;
+
             div = "div_" + id;
             div = document.getElementById(div);
 
-            ocultar_botones();
+            ocultar_botones(".btn_tipo_1");
+            ocultar_botones(".btn_tipo_0");
 
             texto_anterior = document.getElementById("span_" + id).innerText;
 
@@ -162,17 +202,20 @@
         }
 
         function aceptar_edicion(id) {
+            en_edicion = false;
             console.log("aceptar_edicion");
             div = obtener_div(id);
             texto = input_edicion = document.getElementById("input_edicion").value;
 
             div.innerHTML = crear_contenido_div(id, texto);
 
-            mostrar_botones();
+
+            mostrar_botones(".btn_tipo_0");
 
         }
 
         function cancelar_edicion(id, texto_anterior) {
+            en_edicion = false;
 
             console.log("cancelar_edicion");
 
@@ -180,20 +223,21 @@
 
             div.innerHTML = crear_contenido_div(id, texto_anterior);
 
-            mostrar_botones();
+
+            mostrar_botones(".btn_tipo_0");
 
         }
 
-        function ocultar_botones() {
-            botones = document.querySelectorAll(".btn_tipo_1");
+        function ocultar_botones(botones) {
+            botones = document.querySelectorAll(botones);
 
             botones.forEach(elemento => {
                 elemento.style.display = "none";
             });
         }
 
-        function mostrar_botones() {
-            botones = document.querySelectorAll(".btn_tipo_1");
+        function mostrar_botones(botones) {
+            botones = document.querySelectorAll(botones);
             botones.forEach(elemento => {
                 elemento.style.display = "inline";
             });
