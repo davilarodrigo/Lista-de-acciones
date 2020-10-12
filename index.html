@@ -21,13 +21,11 @@
             <div class="col-12 col-lg-5">
                 <div class="text-center display-4">Pendientes</div>
                 <div style="min-height: 300px;" id="acciones_pendientes" class="pb-2 bg-info">
-
                 </div>
             </div>
             <div class="col-12 col-lg-5">
                 <div class="text-center display-4">Activas</div>
                 <div style="min-height: 300px;" id="acciones_activas" class="p-2 bg-info">
-
                 </div>
             </div>
 
@@ -41,8 +39,6 @@
                 <button onclick="borrar_todo()" class="btn_tipo_0 btn btn-danger">Borrar Todo</button>
             </div>
         </div>
-
-
     </div>
 
     <script>
@@ -114,7 +110,7 @@
                 + '">'
                 + texto_accion
                 + '</span>'
-                +'<span style="display:inline-block">'
+                + '<span style="display:inline-block">'
                 + '<button id="btn_b_'
                 + id
                 + '" onclick="borrar_accion('
@@ -136,13 +132,10 @@
                 + ')" class="btn_tipo_1 mr-auto ml-1 py-0 px-2 btn btn-warning item_class_'
                 + id
                 + '">Comenzar</button>'
-                +'</span>';
+                + '</span>';
 
             return div;
         }
-
-
-
 
         function agregar_accion() {
             input_accion = document.getElementById("input_accion");
@@ -212,6 +205,11 @@
             input_edicion.addEventListener("keyup", function (event) {
                 if (event.keyCode === 13) {
                     aceptar_edicion(id);
+                }
+            })
+            input_edicion.addEventListener("keyup", function (event) {
+                if (event.keyCode === 27) {
+                    cancelar_edicion(id,texto_anterior);
                 }
             })
 
