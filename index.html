@@ -22,7 +22,6 @@
                 <div class="text-center display-4">Pendientes</div>
                 <div style="min-height: 300px;" id="acciones_pendientes" class="pb-2 bg-info">
 
-
                 </div>
             </div>
             <div class="col-12 col-lg-5">
@@ -37,7 +36,8 @@
             <div class="mb-3 col-12 col-lg-8 text-center mt-4 ">
                 <input id="input_accion" class="btn_tipo_0" style="width: 40%;" placeholder="Ingrese su accion..."
                     type="text">
-                <button id="btn_agregar_accion" onclick="agregar_accion()" class="btn_tipo_0 btn btn-primary">Añadir</button>
+                <button id="btn_agregar_accion" onclick="agregar_accion()"
+                    class="btn_tipo_0 btn btn-primary">Añadir</button>
                 <button onclick="borrar_todo()" class="btn_tipo_0 btn btn-danger">Borrar Todo</button>
             </div>
         </div>
@@ -53,8 +53,8 @@
         var items = [];
         var en_edicion = false;
 
-        document.getElementById("input_accion").addEventListener("keyup",function(event){
-            if(event.keyCode===13){
+        document.getElementById("input_accion").addEventListener("keyup", function (event) {
+            if (event.keyCode === 13) {
                 agregar_accion();
             }
         });
@@ -64,24 +64,22 @@
             span = "div_" + id;
             item = document.getElementById(span);
 
-
             item.addEventListener("mouseover", function (event) {
 
                 if (!en_edicion) {
-                    ocultar_botones(".btn_tipo_1");
-                    mostrar_botones(".item_class_" + id);
+                    ocultar_elementos(".btn_tipo_1");
+                    mostrar_elementos(".item_class_" + id);
                 }
 
             }, false);
             item.addEventListener("mouseleave", function (event) {
 
-                ocultar_botones(".btn_tipo_1");
+                ocultar_elementos(".btn_tipo_1");
 
             }, false);
 
             //items.push(item);
         }
-
 
         function borrar_todo() {
 
@@ -93,9 +91,9 @@
 
             document.getElementById("input_accion").disabled = false;
             document.getElementById("input_accion").placeholder = "Ingrese su accion...";
-            document.getElementById("btn_agregar_accion").disabled=false;
-            en_edicion=false;
-            
+            document.getElementById("btn_agregar_accion").disabled = false;
+            en_edicion = false;
+
         }
 
 
@@ -120,21 +118,21 @@
                 + id
                 + '" onclick="borrar_accion('
                 + id
-                + ')" class="btn_tipo_1 ml-1 py-0 px-2 btn btn-danger item_class_'
+                + ')" class="btn_tipo_1 mr-auto ml-1 py-0 px-2 btn btn-danger item_class_'
                 + id
                 + '">X</button>'
                 + '<button id="btn_e_'
                 + id
                 + '" onclick="comenzar_edicion('
                 + id
-                + ')" class="btn_tipo_1 ml-1 py-0 px-2 btn btn-primary item_class_'
+                + ')" class="btn_tipo_1 mr-auto ml-1 py-0 px-2 btn btn-primary item_class_'
                 + id
                 + '">Editar</button>'
                 + '<button id="btn_a_'
                 + id
                 + '" onclick="activar_accion('
                 + id
-                + ')" class="btn_tipo_1 ml-1 py-0 px-2 btn btn-warning item_class_'
+                + ')" class="btn_tipo_1 mr-auto ml-1 py-0 px-2 btn btn-warning item_class_'
                 + id
                 + '">Comenzar</button>';
 
@@ -158,7 +156,7 @@
                 acum_id++;
             }
 
-            ocultar_botones(".btn_tipo_1");
+            ocultar_elementos(".btn_tipo_1");
         }
 
         function activar_accion(id) {
@@ -166,8 +164,8 @@
             div = obtener_div(id);
             div.remove();
 
-            div_accion=crear_div_accion(id, texto);
-            lista_activas.insertAdjacentHTML("beforeend", div_accion); 
+            div_accion = crear_div_accion(id, texto);
+            lista_activas.insertAdjacentHTML("beforeend", div_accion);
 
             //esto es para que las acciones comenzadas no se puedan editar ni comenzar, solo se pueden "terminar"
             //en realidad es un parche mas que nada
@@ -185,8 +183,8 @@
         }
 
         function comenzar_edicion(id) {
-   
-            document.getElementById("btn_agregar_accion").disabled=true;
+
+            document.getElementById("btn_agregar_accion").disabled = true;
             document.getElementById("input_accion").disabled = true;
             document.getElementById("input_accion").placeholder = "";
 
@@ -209,8 +207,8 @@
             input_edicion = document.getElementById("input_edicion");
             input_edicion.value = texto_anterior;
 
-            input_edicion.addEventListener("keyup",function(event){
-                if (event.keyCode===13){
+            input_edicion.addEventListener("keyup", function (event) {
+                if (event.keyCode === 13) {
                     aceptar_edicion(id);
                 }
             })
@@ -226,7 +224,7 @@
         }
 
         function aceptar_edicion(id) {
-            document.getElementById("btn_agregar_accion").disabled=false;
+            document.getElementById("btn_agregar_accion").disabled = false;
             document.getElementById("input_accion").disabled = false;
             document.getElementById("input_accion").placeholder = "Ingrese su accion...";
             en_edicion = false;
@@ -237,12 +235,12 @@
             div.innerHTML = crear_contenido_div(id, texto);
 
 
-            mostrar_botones(".btn_tipo_0");
+            mostrar_elementos(".btn_tipo_0");
 
         }
 
         function cancelar_edicion(id, texto_anterior) {
-            document.getElementById("btn_agregar_accion").disabled=false;
+            document.getElementById("btn_agregar_accion").disabled = false;
             document.getElementById("input_accion").disabled = false;
             document.getElementById("input_accion").placeholder = "Ingrese su accion...";
             en_edicion = false;
@@ -254,21 +252,21 @@
             div.innerHTML = crear_contenido_div(id, texto_anterior);
 
 
-            mostrar_botones(".btn_tipo_0");
+            mostrar_elementos(".btn_tipo_0");
 
         }
 
-        function ocultar_botones(botones) {
-            botones = document.querySelectorAll(botones);
+        function ocultar_elementos(elementos) {
+            elementos = document.querySelectorAll(elementos);
 
-            botones.forEach(elemento => {
+            elementos.forEach(elemento => {
                 elemento.style.display = "none";
             });
         }
 
-        function mostrar_botones(botones) {
-            botones = document.querySelectorAll(botones);
-            botones.forEach(elemento => {
+        function mostrar_elementos(elementos) {
+            elementos = document.querySelectorAll(elementos);
+            elementos.forEach(elemento => {
                 elemento.style.display = "inline";
             });
         }
